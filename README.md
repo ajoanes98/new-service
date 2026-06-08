@@ -1,16 +1,16 @@
-# {{SERVICE_NAME}}
+# new-service
 
-> {{SERVICE_NAME}} — scaffolded via the Meijer Platform Golden Path
+> new-service — scaffolded via the Meijer Platform Golden Path
 
 ## Overview
 
 | Property | Value |
 |---|---|
-| Backend | {{BACKEND_FRAMEWORK}} |
-| Frontend | {{FRONTEND_FRAMEWORK}} |
-| Database | {{DATABASE}} |
-| Primary Cloud | {{PRIMARY_CLOUD}} |
-| Secondary Cloud (DR) | {{SECONDARY_CLOUD}} |
+| Backend | .NET 11.0 |
+| Frontend | v26.3.0 |
+| Database | PostgreSQL |
+| Primary Cloud | Azure |
+| Secondary Cloud (DR) | GCP |
 | Criticality | {{CRITICALITY}} |
 
 ## Getting Started

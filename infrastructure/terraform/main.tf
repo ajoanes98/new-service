@@ -1,5 +1,5 @@
-# Terraform configuration for {{SERVICE_NAME}}
-# Primary cloud: {{PRIMARY_CLOUD}} | DR: {{SECONDARY_CLOUD}}
+# Terraform configuration for new-service
+# Primary cloud: Azure | DR: GCP
 
 terraform {
   required_version = ">= 1.5"
@@ -20,7 +20,7 @@ terraform {
     resource_group_name  = "meijer-tfstate-rg"
     storage_account_name = "meijertfstate"
     container_name       = "tfstate"
-    key                  = "{{SERVICE_NAME}}.terraform.tfstate"
+    key                  = "new-service.terraform.tfstate"
   }
 }
 
@@ -64,7 +64,7 @@ variable "gcp_region" {
 # ─────────────────────────────────────────────
 resource "azurerm_cosmosdb_account" "main" {
   count               = var.environment == "production" ? 1 : 0
-  name                = "{{SERVICE_NAME}}-cosmos-${var.environment}"
+  name                = "new-service-cosmos-${var.environment}"
   location            = var.azure_location
   resource_group_name = "meijer-${var.environment}-rg"
   offer_type          = "Standard"
@@ -80,7 +80,7 @@ resource "azurerm_cosmosdb_account" "main" {
   }
 
   tags = {
-    service     = "{{SERVICE_NAME}}"
+    service     = "new-service"
     environment = var.environment
     criticality = "{{CRITICALITY}}"
     managed_by  = "terraform"
@@ -91,15 +91,15 @@ resource "azurerm_cosmosdb_account" "main" {
 # Azure Container App (runtime)
 # ─────────────────────────────────────────────
 resource "azurerm_container_app" "main" {
-  name                         = "{{SERVICE_NAME}}-${var.environment}"
+  name                         = "new-service-${var.environment}"
   container_app_environment_id = data.azurerm_container_app_environment.meijer.id
   resource_group_name          = "meijer-${var.environment}-rg"
   revision_mode                = "Single"
 
   template {
     container {
-      name   = "{{SERVICE_NAME}}"
-      image  = "meijeracr.azurecr.io/{{SERVICE_NAME}}:latest"
+      name   = "new-service"
+      image  = "meijeracr.azurecr.io/new-service:latest"
       cpu    = 0.5
       memory = "1Gi"
 
@@ -111,7 +111,7 @@ resource "azurerm_container_app" "main" {
   }
 
   tags = {
-    service     = "{{SERVICE_NAME}}"
+    service     = "new-service"
     environment = var.environment
     criticality = "{{CRITICALITY}}"
     managed_by  = "terraform"

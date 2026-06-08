@@ -45,8 +45,8 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey={{SERVICE_NAME}}
-            -Dsonar.projectName={{SERVICE_NAME}}
+            -Dsonar.projectKey=new-service
+            -Dsonar.projectName=new-service
             -Dsonar.qualitygate.wait=true
 
   container-scan:
@@ -57,12 +57,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t {{SERVICE_NAME}}:${{ github.sha }} .
+        run: docker build -t new-service:${{ github.sha }} .
 
       - name: Run Trivy container scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "{{SERVICE_NAME}}:${{ github.sha }}"
+          image-ref: "new-service:${{ github.sha }}"
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
@@ -72,9 +72,9 @@ jobs:
       - name: Push image to registry
         if: github.ref == 'refs/heads/main' && success()
         run: |
-          echo "Pushing {{SERVICE_NAME}}:${{ github.sha }} to ACR..."
+          echo "Pushing new-service:${{ github.sha }} to ACR..."
           # az acr login --name meijeracr
-          # docker tag {{SERVICE_NAME}}:${{ github.sha }} meijeracr.azurecr.io/{{SERVICE_NAME}}:${{ github.sha }}
-          # docker push meijeracr.azurecr.io/{{SERVICE_NAME}}:${{ github.sha }}
-          # docker tag {{SERVICE_NAME}}:${{ github.sha }} meijeracr.azurecr.io/{{SERVICE_NAME}}:latest
-          # docker push meijeracr.azurecr.io/{{SERVICE_NAME}}:latest
+          # docker tag new-service:${{ github.sha }} meijeracr.azurecr.io/new-service:${{ github.sha }}
+          # docker push meijeracr.azurecr.io/new-service:${{ github.sha }}
+          # docker tag new-service:${{ github.sha }} meijeracr.azurecr.io/new-service:latest
+          # docker push meijeracr.azurecr.io/new-service:latest
